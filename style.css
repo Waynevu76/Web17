@@ -1,0 +1,10 @@
+p {
+    color: rebeccapurple;
+}
+ul li {
+    color: mediumblue
+}
+
+ul>li {
+    color: brown
+}

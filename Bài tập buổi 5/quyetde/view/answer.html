@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <title>Quyết đê</title>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="#">Quyết.đê!!! <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/ask">Hỏi nhanh</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="/">Đáp gọn</a>
+            </li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+        <h1 id="content" class="text-center">Nội dung câu hỏi</h1>
+        <br>
+        <br>
+        <div class="row text-center" id="btn_answer">
+            <div class="col-md-6">
+                <button id="yes" type="button" class="btn-answer btn-primary btn-lg" data-questionid="">
+                    <span class="glyphicon glyphicon-thumbs-down"></span>
+                    Đúng/Có/Phải
+                </button>
+            </div>  
+            <div class="col-md-6">
+                <button id="no" type="button" class="btn-answer btn btn-danger btn-lg" data-questionid="">
+                    <span class="glyphicon glyphicon-thumbs-down"></span>
+                    Sai/Không/Trái
+                </button>
+            </div>  
+        </div>
+        <br>
+        <br>
+        <div class="row btn-toolbar justify-content-md-center" id="btn_chuyen">
+            <div class="btn-group mr-2">
+                <button type="button" class="btn-answer btn btn-secondary" data-questionid="" id='result'>Kết quả vote</button>
+            </div>
+            <div class="btn-group mr-2">
+                <button type="submit" class="btn btn-success" id='other-question'>Câu hỏi khác</button>
+            </div>
+        </div>  
+    </div>
+    <!-- <button>Xem câu hỏi khác</button>
+    <button class="btn-answer">Xem kết quả</button> -->
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="crossorigin="anonymous"></script>
+
+    <script>
+        $(".btn-answer").click(function() {
+            const vote = $(this).attr("id");
+            const questionId = $(".btn-answer").attr("data-questionid");
+            $.ajax({
+                url: "/vote/" + questionId + "/" + vote,
+                type: "GET",
+                success: function(data) {
+                    window.location.href = "/question/" + questionId;
+                },
+                error: function(err) {
+                    console.log("Error!!!", err);
+                }
+            })
+        })
+        console.log(window.location)
+        $.ajax({
+            url: "http://localhost:6969/api/random",
+            type: "GET",
+            success: function(data) {
+                console.log(data.question);
+                $("#content").text(data.question.content);
+                $(".btn-answer").attr("data-questionid", data.question._id);
+            },
+            error: function(err) {
+                console.log("Error!!!", err);
+            }
+        })
+        $("#result").click(function() {
+            const questionId = $("#result").attr("data-questionid");
+            $.ajax({
+                success: function(data) {
+                    window.location.href = "/question/" + questionId;
+                },
+                error: function(err) {
+                    console.log("Error!!!", err);
+                }
+            })
+        })
+        $("#other-question").click(function() {
+            $.ajax({
+                success: function() {
+                    window.location.href = "/";
+                },
+                error: function(err) {
+                    console.log("Error!!!", err);
+                }
+            })
+        })
+
+    </script>
+
+</body>
+</html>

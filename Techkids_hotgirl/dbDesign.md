@@ -1,0 +1,14 @@
+- User:
+    - username
+    - password
+    - avatar
+- Posts:
+    - picture
+    - description
+    - like
+    - tittle
+    - comments
+    - views
+    - date
+    - author
+

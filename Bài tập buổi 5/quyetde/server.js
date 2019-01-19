@@ -94,7 +94,7 @@ app.get("/vote/:questionId/:vote", (req, res) => {
 			if(err) console.log(err)
 			else res.send({ message: "Success" });
 		});
-
+		
 	// QuestionModel.findOne({ _id: questionId }, function(err, questionFound) {
 	// 	if(err) console.log(err)
 	// 	else if(!questionFound || !questionFound._id) res.status(404).send({ message: "Question not exist" })

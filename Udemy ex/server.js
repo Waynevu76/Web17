@@ -20,10 +20,10 @@ $("#submit").submit(function(event) {
                         <img class="card-img-top" src="${data.results[i].image_480x270}" alt="Card image cap">
                         <div class="card-body">
                             <div style="height:100px" class="font-weight-bold">
-                                <a href="${udemy + data.results[i].url}" class="card-title">${data.results[i].title}</a>
+                                <a target="_blank" href="${udemy + data.results[i].url}" class="card-title">${data.results[i].title}</a>
                             </div>
                             <p style="height:20px" class="card-text font-weight-bold">${data.results[i].price}</p>
-                            <a style="height:40px" href="${udemy + data.results[i].url}" class="btn btn-primary">Go this course</a>
+                            <a style="height:40px" target="_blank" href="${udemy + data.results[i].url}" class="btn btn-primary">Go this course</a>
                         </div>
                     </div>
                 </div>`)
@@ -40,7 +40,7 @@ $("#submit").submit(function(event) {
 
 var j = 2;
 $(window).scroll(function() {
-    if($(window).scrollTop() == ($(document).height() - $(window).height())) {
+    if(($(document).height() - ($(window).height() + $(window).scrollTop()) < 400)) {
         appendData(j);
         j += 1;
     }

@@ -1,4 +1,5 @@
 const express = require('express');
+const bcrypt = require('bcryptjs');
 const UserApi = express.Router();
 
 const UserModel = require('../models/userModel');
@@ -12,14 +13,14 @@ UserApi.use((req, res, next) => {
 
 // CRUD - Create, Read, Update, Delete
 
-// Read all users
+// Read all users http://localhost:6699/api/users?page=1&per_page=5
 UserApi.get('/', (req, res) => {
-    const { page=1, per_page=5 } = req.query;
-    // const perPage = 5;
-    UserModel.find({})
-        .select('-password -__v')
-        .skip((page-1)*per_page)
-        .limit(per_page)
+	const { page=1, per_page=5 } = req.query;
+	// const perPage = 5;
+	UserModel.find({})
+		.select('-password -__v')
+		.skip((page-1)*per_page)
+		.limit(per_page*1)
 		.then((users) => {
 			res.send({ data: users });
 		})
@@ -32,6 +33,7 @@ UserApi.get('/', (req, res) => {
 UserApi.get('/:userId', (req, res) => {
 	const { userId } = req.params;
 	UserModel.findById(userId)
+		.select('-password -__v')
 		.then((userFound) => {
 			res.send({ data: userFound });
 		})
@@ -43,17 +45,23 @@ UserApi.get('/:userId', (req, res) => {
 // Create user
 UserApi.post('/', (req, res) => {
 	const { username, password, avatar } = req.body;
-	const newUsers = { username, password, avatar };
-    UserModel.init()
-    .then(() => {
-        return UserModel.create(newUsers);
-    })
-    .then((userCreated) => {
-        res.send({ data: userCreated });
-    })
-    .catch((error) => {
-        res.send({ error });
-    });
+	// const salt = bcrypt.genSaltSync(12);
+	// const hashPassword = bcrypt.hashSync(password, salt);
+	const newUsers = {
+		username,
+		password,
+		avatar
+	};
+	UserModel.init()
+		.then(() => {
+			return UserModel.create(newUsers);
+		})
+		.then((userCreated) => {
+			res.send({ data: userCreated });
+		})
+		.catch((error) => {
+			res.send({ error });
+		});
 });
 
 // Update user
@@ -64,8 +72,8 @@ UserApi.put('/:userId', (req, res) => {
 		.then((userFound) => {
 			if(!userFound) res.send({ error: "User not exist!" })
 			else {
-				userFound.password = password;
-				userFound.avatar = avatar;
+				if(password) userFound.password = password;
+				if(avatar) userFound.avatar = avatar;
 				return userFound.save();
 			}
 		})
@@ -77,16 +85,16 @@ UserApi.put('/:userId', (req, res) => {
 		});
 });
 
-//Delete users
+// Delete user
 UserApi.delete('/:userId', (req, res) => {
-    const { userId } = req.params;
-    UserModel.findByIdAndRemove(userId)
-    .then(() => {
-        res.send({ data: "success" });
-    })
-    .catch((err) => {
-        res.send({ err })
-    })
-})
+	const { userId } = req.params;
+	UserModel.findByIdAndRemove(userId)
+		.then(() => {
+			res.send({ data: "success" });
+		})
+		.catch((error) => {
+			res.send({ error });
+		});
+});
 
 module.exports = UserApi;

@@ -2,19 +2,19 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const CommentSchema = new Schema({
-    author: String,
-    comments: String,
+    author: { type: Schema.Types.ObjectId, ref: "user"},
+    comment: String,
 })
 
 const PostSchema = new Schema({
     picture: { type: String, required: true},
     description: { type: String},
     like: [String],
-    tittle: { type: String, required: true },
+    title: { type: String, required: true },
     comments: [CommentSchema],
     views: { type: Number, default: 0},
     date: { type: Date, default: new Date()},
-    author: String,
+    author: { type: Schema.Types.ObjectId, ref: 'user' },
 }, {
     timestamps: true // createAt updateAti
 }
